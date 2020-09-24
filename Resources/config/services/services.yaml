@@ -1,0 +1,20 @@
+services:
+    Enhavo\Bundle\BackupBundle\Backup\BackupManager:
+        arguments:
+            - '@Enhavo\Component\Type\FactoryInterface[Source]'
+            - '@Enhavo\Component\Type\FactoryInterface[Normalizer]'
+            - '@Enhavo\Component\Type\FactoryInterface[Storage]'
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+            - '%enhavo_backup.backups%'
+
+    Enhavo\Bundle\BackupBundle\Utility\FileHelper:
+        arguments:
+            - '@filesystem'
+            - '@kernel'
+            - '%enhavo_backup.tmp_dir%'
+
+    Enhavo\Bundle\BackupBundle\Command\BackupCommand:
+        arguments:
+            - '@Enhavo\Bundle\BackupBundle\Backup\BackupManager'
+        tags:
+            - { name: 'console.command' }

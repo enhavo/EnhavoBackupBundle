@@ -1,0 +1,19 @@
+services:
+    Enhavo\Bundle\BackupBundle\Storage\Type\StorageType:
+        tags:
+            - { name: enhavo_backup.storage }
+
+    Enhavo\Bundle\BackupBundle\Storage\Type\LocalStorageType:
+        arguments:
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+        tags:
+            - { name: enhavo_backup.storage }
+
+    Enhavo\Bundle\BackupBundle\Storage\Type\FtpStorageType:
+        tags:
+            - { name: enhavo_backup.storage }
+
+    Enhavo\Bundle\BackupBundle\Storage\Type\SFtpStorageType:
+        tags:
+            - { name: enhavo_backup.storage }
+

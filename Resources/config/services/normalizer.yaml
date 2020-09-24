@@ -1,0 +1,14 @@
+services:
+    Enhavo\Bundle\BackupBundle\Normalizer\Type\NormalizerType:
+        tags:
+            - { name: enhavo_backup.normalizer }
+
+    Enhavo\Bundle\BackupBundle\Normalizer\AbstractNormalizerType:
+        abstract: true
+        arguments:
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+
+    Enhavo\Bundle\BackupBundle\Normalizer\Type\ZipNormalizerType:
+        parent: Enhavo\Bundle\BackupBundle\Normalizer\AbstractNormalizerType
+        tags:
+            - { name: enhavo_backup.normalizer }

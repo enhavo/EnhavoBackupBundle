@@ -1,0 +1,19 @@
+services:
+    Enhavo\Bundle\BackupBundle\Source\Type\SourceType:
+        tags:
+            - { name: enhavo_backup.source }
+
+    Enhavo\Bundle\BackupBundle\Source\AbstractSourceType:
+        abstract: true
+        arguments:
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+
+    Enhavo\Bundle\BackupBundle\Source\Type\DirectorySourceType:
+        parent: Enhavo\Bundle\BackupBundle\Source\AbstractSourceType
+        tags:
+            - { name: enhavo_backup.source }
+
+    Enhavo\Bundle\BackupBundle\Source\Type\MysqlSourceType:
+        parent: Enhavo\Bundle\BackupBundle\Source\AbstractSourceType
+        tags:
+            - { name: enhavo_backup.source }

@@ -1,0 +1,25 @@
+{
+  "name": "enhavo/seo-bundle",
+  "type": "library",
+  "description": "EnhavoBackupBundle",
+  "keywords": ["framework"],
+  "homepage": "https://enhavo.com",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Benjamin Lutze",
+      "email": "blutze@xq-web.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": { "Enhavo\\Bundle\\BackupBundle\\": "" }
+  },
+  "require": {
+    "ext-zip": "*",
+    "ext-ftp": "*",
+    "php": "^7.2",
+    "enhavo/app-bundle": "dev-master",
+    "league/flysystem": "^1.1",
+    "league/flysystem-sftp": "^1.0"
+  }
+}

@@ -3,7 +3,7 @@
 
 namespace Enhavo\Bundle\BackupBundle\Exception;
 
-class ConfigurationNotFoundException extends \Exception
+class BackupNotFoundException extends \Exception
 {
 
 }

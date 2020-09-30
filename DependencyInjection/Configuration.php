@@ -6,6 +6,13 @@
 
 namespace Enhavo\Bundle\BackupBundle\DependencyInjection;
 
+use Enhavo\Bundle\AppBundle\Controller\ResourceController;
+use Enhavo\Bundle\AppBundle\Factory\Factory;
+use Enhavo\Bundle\BackupBundle\Entity\Backup;
+use Enhavo\Bundle\BackupBundle\Entity\BackupFile;
+use Enhavo\Bundle\BackupBundle\Form\Type\BackupType;
+use Enhavo\Bundle\BackupBundle\Repository\BackupRepository;
+use Sylius\Bundle\ResourceBundle\Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -27,7 +34,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('driver')->defaultValue('doctrine/orm')->end()
                 ->scalarNode('object_manager')->defaultValue('default')->end()
-                ->scalarNode('tmp_dir')->defaultValue('media/backup/tmp')->end()
+                ->scalarNode('tmp_dir')->defaultValue('var/backup/tmp')->end()
             ->end()
             ->children()
                 ->arrayNode('backups')
@@ -43,10 +50,50 @@ class Configuration implements ConfigurationInterface
                             ->variableNode('storages')
                                 ->cannotBeEmpty()
                             ->end()
+                            ->variableNode('notification')
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
             ->end()
+        ;
+        $treeBuilder->getRootNode()
+        ->children()
+            ->arrayNode('resources')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('backup')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->variableNode('options')->end()
+                            ->arrayNode('classes')
+                                ->addDefaultsIfNotSet()
+                                ->children()
+                                    ->scalarNode('model')->defaultValue(Backup::class)->end()
+                                    ->scalarNode('controller')->defaultValue(ResourceController::class)->end()
+                                    ->scalarNode('repository')->defaultValue(BackupRepository::class)->end()
+                                    ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                                    ->scalarNode('form')->defaultValue(BackupType::class)->cannotBeEmpty()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+            ->arrayNode('backup_file')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->variableNode('options')->end()
+                    ->arrayNode('classes')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->scalarNode('model')->defaultValue(BackupFile::class)->end()
+                            ->scalarNode('controller')->defaultValue(ResourceController::class)->end()
+                            ->scalarNode('repository')->defaultValue(EntityRepository::class)->end()
+                            ->scalarNode('factory')->defaultValue(Factory::class)->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()
         ;
 
         return $treeBuilder;

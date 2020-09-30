@@ -4,6 +4,7 @@ services:
             - '@Enhavo\Component\Type\FactoryInterface[Source]'
             - '@Enhavo\Component\Type\FactoryInterface[Normalizer]'
             - '@Enhavo\Component\Type\FactoryInterface[Storage]'
+            - '@Enhavo\Component\Type\FactoryInterface[Notification]'
             - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
             - '%enhavo_backup.backups%'
 
@@ -18,3 +19,17 @@ services:
             - '@Enhavo\Bundle\BackupBundle\Backup\BackupManager'
         tags:
             - { name: 'console.command' }
+
+    Enhavo\Bundle\BackupBundle\Menu\BackupMenu:
+        parent: Enhavo\Bundle\AppBundle\Menu\Menu\BaseMenu
+        tags:
+            - { name: enhavo.menu, alias: backup_backup }
+
+    Enhavo\Bundle\BackupBundle\Controller\DownloadController:
+        arguments:
+            - '@Enhavo\Bundle\BackupBundle\Backup\BackupManager'
+            - '@enhavo_backup.repository.backup_file'
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+        tags:
+            - { name: controller.service_arguments }
+            - { name: container.service_subscriber }

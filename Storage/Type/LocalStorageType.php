@@ -62,7 +62,7 @@ class LocalStorageType extends AbstractStorageType
         foreach ($files as $file) {
             $filename = basename($file);
             if (is_file($file)) {
-                copy($file, $target . '/' . $filename);
+                $this->fileHelper->copy($file, $target . '/' . $filename);
             }
         }
     }

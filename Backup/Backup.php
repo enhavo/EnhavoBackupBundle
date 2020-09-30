@@ -7,6 +7,7 @@
 namespace Enhavo\Bundle\BackupBundle\Backup;
 
 
+use Enhavo\Bundle\BackupBundle\Notification\Notification;
 use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Enhavo\Bundle\BackupBundle\Storage\StorageCollection;
 use Enhavo\Bundle\BackupBundle\Normalizer\Normalizer;
@@ -15,24 +16,32 @@ use Enhavo\Bundle\BackupBundle\Storage\Storage;
 
 class Backup
 {
+    /** @var string */
+    private $name;
     /** @var Source[] */
     private $sources;
     /** @var Normalizer */
     private $normalizer;
     /** @var Storage[] */
     private $storages;
+    /** @var Notification|null */
+    private $notification;
 
     /**
-     * Strategy constructor.
+     * Backup constructor.
+     * @param string $name
      * @param Source[] $sources
      * @param Normalizer $normalizer
      * @param Storage[] $storages
+     * @param Notification|null $notification
      */
-    public function __construct(array $sources, Normalizer $normalizer, array $storages)
+    public function __construct(string $name, array $sources, Normalizer $normalizer, array $storages, ?Notification $notification)
     {
+        $this->name = $name;
         $this->sources = $sources;
         $this->normalizer = $normalizer;
         $this->storages = $storages;
+        $this->notification = $notification;
     }
 
 
@@ -70,4 +79,21 @@ class Backup
             $storage->cleanup();
         }
     }
+
+    public function notify($message, $resource)
+    {
+        if ($this->notification) {
+            $this->notification->notify($message, $resource);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+
 }

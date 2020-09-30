@@ -42,7 +42,7 @@ class FileHelper
 
     public function normalizeDirectory(string $dir): string
     {
-        if (!str_starts_with($dir, '/')) {
+        if (substr($dir, 0, 1) !== '/') {
             $dir = $this->appKernel->getProjectDir() . '/' . $dir;
         }
 
@@ -58,6 +58,7 @@ class FileHelper
 
     public function mkTmpDir($dir): string
     {
+        $this->mkdir($this->normalizeDirectory($this->tmpDir));
         return $this->mkdir($this->normalizeDirectory($this->tmpDir) . '/' . $dir);
     }
 
@@ -68,12 +69,12 @@ class FileHelper
         }
     }
 
-    public function listRecursive($path)
+    public function listRecursive($path): \RecursiveIteratorIterator
     {
         return new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS));
     }
 
-    public function listFiles($path)
+    public function listFiles($path): \FilesystemIterator
     {
         return new \FilesystemIterator($path, \FilesystemIterator::SKIP_DOTS);
     }
@@ -81,5 +82,10 @@ class FileHelper
     public function remove($files): void
     {
         $this->fileSystem->remove($files);
+    }
+    
+    public function copy($from, $to): void
+    {
+        $this->fileSystem->copy($from, $to);
     }
 }

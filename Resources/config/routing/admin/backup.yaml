@@ -1,0 +1,92 @@
+enhavo_backup_backup_index:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/index
+    methods: [GET]
+    defaults:
+        _controller: enhavo_backup.controller.backup:indexAction
+        _sylius:
+            viewer:
+                label: backup.label.backups
+                translation_domain: EnhavoBackupBundle
+                table_route_parameters:
+                    group: $id
+                actions:
+                    create:
+                        type: create
+                        hidden: true
+                        route: ~
+
+enhavo_backup_backup_update:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/update/{id}
+    methods: [GET,POST]
+    defaults:
+        _controller: enhavo_backup.controller.backup:updateAction
+        _sylius:
+            viewer:
+                tabs:
+                    main:
+                        template: '@EnhavoBackup/admin/resource/backup/general.html.twig'
+                        label: ~
+                actions:
+                    save:
+                        type: save
+                        hidden: true
+                        route: ~
+
+enhavo_backup_backup_table:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/table
+    defaults:
+        _controller: enhavo_backup.controller.backup:tableAction
+        _sylius:
+            filters:
+                name:
+                    type: text
+                    property: name
+                    label: backup.label.name
+                    translation_domain: EnhavoBackupBundle
+                date:
+                    type: date_between
+                    property: date
+                    label: backup.label.date
+                    translation_domain: EnhavoBackupBundle
+            viewer:
+                translation_domain: EnhavoBackupBundle
+                columns:
+                    name:
+                        type: text
+                        label: backup.label.name
+                        property: name
+                        width: 4
+                    date:
+                        type: datetime
+                        label: backup.label.date
+                        property: date
+                        width: 4
+
+enhavo_backup_backup_delete:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/delete/{id}
+    methods: [POST]
+    defaults:
+        _controller: enhavo_backup.controller.backup:deleteAction
+
+enhavo_backup_backup_batch:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/batch
+    methods: [POST]
+    defaults:
+        _controller: enhavo_backup.controller.backup:batchAction
+        _sylius:
+            paginate: false
+            criteria:
+                id: $ids
+            batches:
+                delete:
+                    type: delete

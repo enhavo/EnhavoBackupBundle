@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="Enhavo\Bundle\BackupBundle\Entity\Backup" table="backup_backup" repository-class="Enhavo\Bundle\BackupBundle\Repository\BackupRepository">
+        <id name="id" type="integer" column="id">
+            <generator />
+        </id>
+
+        <field name="name" nullable="true" />
+        <field name="backup" nullable="true" />
+        <field name="date" type="datetime" nullable="true" />
+
+        <one-to-many field="files" target-entity="Enhavo\Bundle\BackupBundle\Entity\BackupFile" mapped-by="backup" orphan-removal="true">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+                <cascade-refresh />
+            </cascade>
+        </one-to-many>
+
+    </entity>
+</doctrine-mapping>

@@ -1,0 +1,6 @@
+<strong>Name:</strong>{{ resource.name }}<br/>
+<strong>Date:</strong> {{ resource.date|date('Y-m-d H:m:s') }}<br/>
+<strong>Files:</strong><br/>
+{% for file in resource.files %}
+    <a download href="{{ path('enhavo_backup_backup_file_download', {id: file.id}) }}">{{ file.name }}</a><br/>
+{% endfor %}

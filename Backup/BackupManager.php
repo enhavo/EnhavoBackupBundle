@@ -4,7 +4,7 @@
 namespace Enhavo\Bundle\BackupBundle\Backup;
 
 
-use Enhavo\Bundle\BackupBundle\Exception\ConfigurationNotFoundException;
+use Enhavo\Bundle\BackupBundle\Exception\BackupNotFoundException;
 use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Enhavo\Bundle\BackupBundle\Storage\StorageCollection;
 use Enhavo\Bundle\BackupBundle\Utility\FileHelper;
@@ -21,6 +21,9 @@ class BackupManager
     /** @var FactoryInterface */
     private $storageFactory;
 
+    /** @var FactoryInterface */
+    private $notificationFactory;
+
     /** @var FileHelper */
     private $fileHelper;
 
@@ -32,34 +35,42 @@ class BackupManager
      * @param FactoryInterface $sourceFactory
      * @param FactoryInterface $normalizerFactory
      * @param FactoryInterface $storageFactory
+     * @param FactoryInterface $notificationFactory
      * @param FileHelper $fileHelper
      * @param array $configurations
      */
-    public function __construct(FactoryInterface $sourceFactory, FactoryInterface $normalizerFactory, FactoryInterface $storageFactory, FileHelper $fileHelper, array $configurations)
+    public function __construct(FactoryInterface $sourceFactory, FactoryInterface $normalizerFactory, FactoryInterface $storageFactory, FactoryInterface $notificationFactory, FileHelper $fileHelper, array $configurations)
     {
         $this->sourceFactory = $sourceFactory;
         $this->normalizerFactory = $normalizerFactory;
         $this->storageFactory = $storageFactory;
+        $this->notificationFactory = $notificationFactory;
         $this->fileHelper = $fileHelper;
         $this->configurations = $configurations;
     }
 
+
     public function backup($name)
     {
-        $configuration = $this->getBackup($name);
+        $backup = $this->getBackup($name);
 
         $sourceCollections = [];
         $storageCollection = null;
         try {
-            $sourceCollections = $configuration->collect();
-            $storageCollection = $configuration->normalize($sourceCollections);
-            $configuration->store($storageCollection);
-            $configuration->cleanup();
+            $sourceCollections = $backup->collect();
+            $storageCollection = $backup->normalize($sourceCollections);
+            $storageCollection->setName($name);
+            $backup->store($storageCollection);
+            $backup->cleanup();
 
             $this->cleanupCollections($sourceCollections, $storageCollection);
+
+            $backup->notify(sprintf('Backup "%s" was executed successfully', $name), $backup);
 
         } catch (\Exception $ex) {
             $this->cleanupCollections($sourceCollections, $storageCollection);
+
+            $backup->notify(sprintf('Error during Backup "%s": "', $name) . $ex->getMessage() . '"', $backup);
 
             throw $ex;
         }
@@ -94,12 +105,14 @@ class BackupManager
     public function getBackup(string $name): Backup
     {
         if (!isset($this->configurations[$name])) {
-            throw new ConfigurationNotFoundException(sprintf('Configuration named "%s" not found', $name));
+            throw new BackupNotFoundException(sprintf('Configuration named "%s" not found', $name));
         }
 
         $config = $this->configurations[$name];
 
-        return new Backup($this->createSources($config['sources']), $this->createNormalizer($config['normalizer']), $this->createStorages($config['storages']));
+        $notifiation = isset($config['notification']) ? $this->createNotification($config['notification']) : null;
+
+        return new Backup($name, $this->createSources($config['sources']), $this->createNormalizer($config['normalizer']), $this->createStorages($config['storages']), $notifiation);
     }
 
     private function createSources($config)
@@ -137,5 +150,10 @@ class BackupManager
     private function createNormalizer($options)
     {
         return $this->normalizerFactory->create($options);
+    }
+
+    private function createNotification($options)
+    {
+        return $this->notificationFactory->create($options);
     }
 }

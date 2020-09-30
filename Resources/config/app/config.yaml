@@ -1,2 +1,22 @@
 enhavo_backup:
     backups: []
+
+enhavo_app:
+    template_paths:
+        enhavo_backup:
+            path: '@EnhavoBackupBundle/Resources/views'
+            priority: 10
+    roles:
+        enhavo_backup_backup_index:
+            role: ROLE_ENHAVO_BACKUP_BACKUP_INDEX
+            label: subscriber.role.label.index
+            translation_domain: EnhavoNewsletterBundle
+        enhavo_backup_backup_update:
+            role: ROLE_ENHAVO_BACKUP_BACKUP_UPDATE
+            label: subscriber.role.label.update
+            translation_domain: EnhavoNewsletterBundle
+        enhavo_backup_backup_delete:
+            role: ROLE_ENHAVO_BACKUP_BACKUP_DELETE
+            label: subscriber.role.label.delete
+            translation_domain: EnhavoNewsletterBundle
+

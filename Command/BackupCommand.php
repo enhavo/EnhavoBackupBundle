@@ -36,7 +36,7 @@ class BackupCommand extends Command
         $this
             ->setName('enhavo:backup')
             ->setDescription('Execute given backup strategy or clean storages')
-            ->addArgument('strategy', InputArgument::REQUIRED, 'Name of the backup strategy to execute')
+            ->addArgument('backup', InputArgument::REQUIRED, 'Name of the backup to execute')
             ->addArgument('operation', InputArgument::OPTIONAL, '', 'backup')
         ;
     }
@@ -48,14 +48,13 @@ class BackupCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $strategy = $input->getArgument('strategy');
+        $backup = $input->getArgument('backup');
         $operation = $input->getArgument('operation');
         if ($operation === 'cleanup') {
-            $this->backupManager->cleanup($strategy);
+            $this->backupManager->cleanup($backup);
 
         } else {
-            $this->backupManager->backup($strategy);
+            $this->backupManager->backup($backup);
         }
-
     }
 }

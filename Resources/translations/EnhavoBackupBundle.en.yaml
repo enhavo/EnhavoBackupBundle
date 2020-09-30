@@ -1,0 +1,11 @@
+backup:
+    form:
+        label:
+            name: 'Name'
+            date: 'Date'
+
+    label:
+        backups: 'Backups'
+        backup: 'Backup'
+        name: 'Name'
+        date: 'Date'

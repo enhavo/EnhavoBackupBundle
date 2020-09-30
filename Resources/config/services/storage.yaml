@@ -17,3 +17,13 @@ services:
         tags:
             - { name: enhavo_backup.storage }
 
+    Enhavo\Bundle\BackupBundle\Storage\Type\EnhavoStorageType:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@enhavo_backup.repository.backup'
+            - '@enhavo_backup.factory.backup'
+            - '@enhavo_backup.factory.backup_file'
+            - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+        tags:
+            - { name: enhavo_backup.storage }
+

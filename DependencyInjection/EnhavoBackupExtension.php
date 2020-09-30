@@ -27,6 +27,7 @@ class EnhavoBackupExtension extends AbstractResourceExtension implements Prepend
     {
         $config = $this->processConfiguration(new Configuration(), $config);
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $this->registerResources('enhavo_backup', $config['driver'], $config['resources'], $container);
 
         $container->setParameter('enhavo_backup.tmp_dir', $config['tmp_dir']);
         $container->setParameter('enhavo_backup.backups', $config['backups']);
@@ -36,6 +37,7 @@ class EnhavoBackupExtension extends AbstractResourceExtension implements Prepend
             'services/source.yaml',
             'services/normalizer.yaml',
             'services/storage.yaml',
+            'services/notification.yaml',
         ];
 
         foreach ($configFiles as $configFile) {

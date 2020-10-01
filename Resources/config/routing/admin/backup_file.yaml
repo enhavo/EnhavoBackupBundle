@@ -1,0 +1,6 @@
+enhavo_backup_backup_file_download:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/file/download/{id}
+    methods: [GET]
+    controller: Enhavo\Bundle\BackupBundle\Controller\DownloadController::downloadAction

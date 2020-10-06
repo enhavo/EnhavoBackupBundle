@@ -48,13 +48,19 @@ class BackupCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $backup = $input->getArgument('backup');
-        $operation = $input->getArgument('operation');
-        if ($operation === 'cleanup') {
-            $this->backupManager->cleanup($backup);
+        try {
+            $backup = $input->getArgument('backup');
+            $operation = $input->getArgument('operation');
+            if ($operation === 'cleanup') {
+                $this->backupManager->cleanup($backup);
 
-        } else {
-            $this->backupManager->backup($backup);
+            } else {
+                $this->backupManager->backup($backup);
+            }
+        } catch (\Exception $exception) {
+            return 1;
         }
+
+        return 0;
     }
 }

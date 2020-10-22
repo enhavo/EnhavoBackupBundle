@@ -41,10 +41,10 @@ class LocalStorageType extends AbstractStorageType
             $files = $this->fileHelper->listFiles($target);
             foreach ($files as $file) {
                 if ($file->isFile()) {
-                    $mtime = new \DateTime();
-                    $mtime->setTimestamp($file->getMTime());
-                    $mtime->add($dateInterval);
-                    if ($mtime < $now) {
+                    $dateCreated = new \DateTime();
+                    $dateCreated->setTimestamp($file->getCTime());
+                    $dateCreated->add($dateInterval);
+                    if ($dateCreated < $now) {
                         unlink($file->getRealPath());
                     }
                 }

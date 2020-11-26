@@ -7,41 +7,46 @@
 namespace Enhavo\Bundle\BackupBundle\Notification\Type;
 
 
-use Enhavo\Bundle\AppBundle\Mail\MailManager;
+use Enhavo\Bundle\AppBundle\Mailer\MailerManager;
+use Enhavo\Bundle\AppBundle\Mailer\Message;
 use Enhavo\Bundle\AppBundle\Template\TemplateManager;
 use Enhavo\Bundle\BackupBundle\Notification\AbstractNotificationType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EmailNotificationType extends AbstractNotificationType
 {
-    /** @var MailManager */
-    private $mailManager;
+    /** @var MailerManager */
+    private $mailerManager;
 
     /** @var TemplateManager */
     private $templateManager;
 
     /**
      * EmailNotificationType constructor.
-     * @param MailManager $mailManager
+     * @param MailerManager $mailerManager
      * @param TemplateManager $templateManager
      */
-    public function __construct(MailManager $mailManager, TemplateManager $templateManager)
+    public function __construct(MailerManager $mailerManager, TemplateManager $templateManager)
     {
-        $this->mailManager = $mailManager;
+        $this->mailerManager = $mailerManager;
         $this->templateManager = $templateManager;
     }
 
 
     public function notify(string $message, $resource, array $options = []): void
     {
-        $message = $this->mailManager->createMessage(
-            $options['from'], $options['name'], $options['to'], $options['subject'],
-            $this->templateManager->getTemplate($options['template']), [
-                'resource' => $resource,
-                'message' => $message,
-            ], [], $options['content_type']
-        );
-        $this->mailManager->sendMessage($message);
+        $message = $this->mailerManager->createMessage();
+        $message->setFrom($options['from']);
+        $message->setSenderName($options['name']);
+        $message->setTo($options['to']);
+        $message->setSubject($options['subject']);
+        $message->setTemplate($options['template']);
+        $message->setContentType($options['content_type']);
+        $message->setContext([
+            'resource' => $resource,
+            'message' => $message,
+        ]);
+        $this->mailerManager->sendMessage($message);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -50,7 +55,7 @@ class EmailNotificationType extends AbstractNotificationType
             'name' => 'enhavo',
             'subject' => 'Backup Notification for "{{ resource.name }}"',
             'template' => 'EnhavoBackupBundle:mail/notification:email.txt.twig',
-            'content_type' => MailManager::CONTENT_TYPE_PLAIN,
+            'content_type' => Message::CONTENT_TYPE_PLAIN,
         ]);
         $resolver->setRequired([
             'from',

@@ -5,7 +5,7 @@ services:
 
     Enhavo\Bundle\BackupBundle\Notification\Type\EmailNotificationType:
         arguments:
-            - '@Enhavo\Bundle\AppBundle\Mail\MailManager'
+            - '@Enhavo\Bundle\AppBundle\Mailer\MailerManager'
             - '@enhavo_app.template.manager'
         tags:
             - { name: enhavo_backup.notification }

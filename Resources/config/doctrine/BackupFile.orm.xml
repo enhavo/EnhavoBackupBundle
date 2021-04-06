@@ -8,7 +8,7 @@
         <field name="path" nullable="true" />
         <field name="name" nullable="true" />
 
-        <many-to-one field="backup" target-entity="Enhavo\Bundle\BackupBundle\Entity\Backup">
+        <many-to-one field="backup" target-entity="Enhavo\Bundle\BackupBundle\Entity\Backup" inversed-by="files">
             <cascade>
                 <cascade-persist />
                 <cascade-remove />

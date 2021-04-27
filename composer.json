@@ -18,8 +18,8 @@
     "ext-zip": "*",
     "ext-ftp": "*",
     "php": "^7.2",
-    "enhavo/app-bundle": "dev-master",
-    "enhavo/type": "dev-master",
+    "enhavo/app-bundle": "^0.10",
+    "enhavo/type": "^0.10",
     "symfony/lock": "^4.4",
     "league/flysystem": "^1.1",
     "league/flysystem-sftp": "^1.0"

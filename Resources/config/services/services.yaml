@@ -1,10 +1,10 @@
 services:
     Enhavo\Bundle\BackupBundle\Backup\BackupManager:
         arguments:
-            - '@Enhavo\Component\Type\FactoryInterface[Source]'
-            - '@Enhavo\Component\Type\FactoryInterface[Normalizer]'
-            - '@Enhavo\Component\Type\FactoryInterface[Storage]'
-            - '@Enhavo\Component\Type\FactoryInterface[Notification]'
+            - '@Enhavo\Component\Type\FactoryInterface[BackupSource]'
+            - '@Enhavo\Component\Type\FactoryInterface[BackupNormalizer]'
+            - '@Enhavo\Component\Type\FactoryInterface[BackupStorage]'
+            - '@Enhavo\Component\Type\FactoryInterface[BackupNotification]'
             - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
             - '%enhavo_backup.backups%'
 

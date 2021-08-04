@@ -35,18 +35,18 @@ class EmailNotificationType extends AbstractNotificationType
 
     public function notify(string $message, $resource, array $options = []): void
     {
-        $message = $this->mailerManager->createMessage();
-        $message->setFrom($options['from']);
-        $message->setSenderName($options['name']);
-        $message->setTo($options['to']);
-        $message->setSubject($options['subject']);
-        $message->setTemplate($options['template']);
-        $message->setContentType($options['content_type']);
-        $message->setContext([
+        $mailerMessage = $this->mailerManager->createMessage();
+        $mailerMessage->setFrom($options['from']);
+        $mailerMessage->setSenderName($options['name']);
+        $mailerMessage->setTo($options['to']);
+        $mailerMessage->setSubject($options['subject']);
+        $mailerMessage->setTemplate($options['template']);
+        $mailerMessage->setContentType($options['content_type']);
+        $mailerMessage->setContext([
             'resource' => $resource,
             'message' => $message,
         ]);
-        $this->mailerManager->sendMessage($message);
+        $this->mailerManager->sendMessage($mailerMessage);
     }
 
     public function configureOptions(OptionsResolver $resolver)

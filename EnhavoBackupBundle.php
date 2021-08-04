@@ -25,9 +25,9 @@ class EnhavoBackupBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new TypeCompilerPass('Source', 'enhavo_backup.source', Source::class));
-        $container->addCompilerPass(new TypeCompilerPass('Normalizer', 'enhavo_backup.normalizer', Normalizer::class));
-        $container->addCompilerPass(new TypeCompilerPass('Storage', 'enhavo_backup.storage', Storage::class));
-        $container->addCompilerPass(new TypeCompilerPass('Notification', 'enhavo_backup.notification', Notification::class));
+        $container->addCompilerPass(new TypeCompilerPass('BackupSource', 'enhavo_backup.source', Source::class));
+        $container->addCompilerPass(new TypeCompilerPass('BackupNormalizer', 'enhavo_backup.normalizer', Normalizer::class));
+        $container->addCompilerPass(new TypeCompilerPass('BackupStorage', 'enhavo_backup.storage', Storage::class));
+        $container->addCompilerPass(new TypeCompilerPass('BackupNotification', 'enhavo_backup.notification', Notification::class));
     }
 }

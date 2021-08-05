@@ -59,7 +59,7 @@ class BackupManager
         try {
             $sourceCollections = $backup->collect();
             $storageCollection = $backup->normalize($sourceCollections);
-            $storageCollection->setName($name);
+            $storageCollection->setName($backup->getName());
             $backup->store($storageCollection);
             $backup->cleanup();
 
@@ -78,10 +78,10 @@ class BackupManager
 
     public function cleanup($name)
     {
-        $strategy = $this->getBackup($name);
+        $backup = $this->getBackup($name);
 
         try {
-            $strategy->cleanup();
+            $backup->cleanup();
 
         } catch (\Exception $ex) {
             throw $ex;
@@ -89,10 +89,10 @@ class BackupManager
     }
 
     /**
-     * @param SourceCollection[] $sourceCollections
-     * @param StorageCollection $storageCollection
+     * @param array $sourceCollections
+     * @param StorageCollection|null $storageCollection
      */
-    private function cleanupCollections(array $sourceCollections, StorageCollection $storageCollection)
+    private function cleanupCollections(array $sourceCollections, ?StorageCollection $storageCollection)
     {
         foreach ($sourceCollections as $collection) {
             $this->fileHelper->remove($collection->getCleanupFiles());

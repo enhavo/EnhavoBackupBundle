@@ -12,3 +12,8 @@ services:
         parent: Enhavo\Bundle\BackupBundle\Normalizer\AbstractNormalizerType
         tags:
             - { name: enhavo_backup.normalizer }
+
+    Enhavo\Bundle\BackupBundle\Normalizer\Type\ZipCliNormalizerType:
+        parent: Enhavo\Bundle\BackupBundle\Normalizer\AbstractNormalizerType
+        tags:
+            - { name: enhavo_backup.normalizer }

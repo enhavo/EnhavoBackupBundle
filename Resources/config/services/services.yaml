@@ -1,3 +1,6 @@
+parameters:
+    enhavo_backup_api_key: '%env(ENHAVO_BACKUP_API_KEY)%'
+
 services:
     Enhavo\Bundle\BackupBundle\Backup\BackupManager:
         arguments:
@@ -33,3 +36,10 @@ services:
         tags:
             - { name: controller.service_arguments }
             - { name: container.service_subscriber }
+
+
+    Enhavo\Bundle\BackupBundle\Controller\BackupController:
+        arguments:
+            - '%enhavo_backup_api_key%'
+        tags:
+            - { name: controller.service_arguments }

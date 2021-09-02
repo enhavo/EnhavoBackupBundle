@@ -1,0 +1,8 @@
+enhavo_backup_backup_create:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/create/{apiKey}/{backup}
+    defaults:
+        backup: default
+    methods: [GET]
+    controller: Enhavo\Bundle\BackupBundle\Controller\BackupController::create

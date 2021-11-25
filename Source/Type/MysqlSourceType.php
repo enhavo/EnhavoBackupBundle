@@ -10,6 +10,7 @@ namespace Enhavo\Bundle\BackupBundle\Source\Type;
 use Enhavo\Bundle\BackupBundle\Source\AbstractSourceType;
 use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Process\Process;
 
 class MysqlSourceType extends AbstractSourceType
 {
@@ -33,10 +34,36 @@ class MysqlSourceType extends AbstractSourceType
         $dbUser = (urldecode(parse_url($url, PHP_URL_USER)));
         $dbPassword = (urldecode(parse_url($url, PHP_URL_PASS)));
         $dbName = (urldecode(substr(parse_url($url, PHP_URL_PATH), 1)));
-        $mysqldump = sprintf('mysqldump -u%s -p%s %s > %s 2>/dev/null', $dbUser, $dbPassword, $dbName, $target);
+        $dbHost = (urldecode(parse_url($url, PHP_URL_HOST)));
+        $dbPort = (urldecode(parse_url($url, PHP_URL_PORT)));
 
-        $result = '';
-        passthru($mysqldump, $result);
+        $command = ['mysqldump'];
+        if ($dbUser) {
+            $command[] = sprintf('-u %s', $dbUser);
+        }
+        if ($dbPassword) {
+            $command[] = sprintf('-p%s', $dbPassword);
+        }
+        if ($dbHost) {
+            $command[] = sprintf('-h%s', $dbHost);
+        }
+        if ($dbPort) {
+            $command[] = sprintf('--port=%s', $dbPort);
+        }
+        $command[] = $dbName;
+        $command[] = sprintf('> %s', $target);
+
+
+        $command = implode(' ', $command);
+        $process = new Process($command);
+        $process->run();
+
+        if ($process->isSuccessful()) {
+            $result = $process->getOutput();
+        } else {
+            $result = $process->getErrorOutput();
+        }
+
         return $result;
     }
 

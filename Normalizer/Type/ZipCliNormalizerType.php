@@ -10,6 +10,7 @@ use Enhavo\Bundle\BackupBundle\Normalizer\AbstractNormalizerType;
 use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Enhavo\Bundle\BackupBundle\Storage\StorageCollection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Process\Process;
 
 class ZipCliNormalizerType extends AbstractNormalizerType
 {
@@ -49,9 +50,16 @@ class ZipCliNormalizerType extends AbstractNormalizerType
 
         $command = sprintf('zip %s %s', $target, implode(' ', $files));
 
-        $result = '';
-        passthru($command, $result);
-        echo $result;
+        $process = new Process($command);
+        $process->run();
+
+        if ($process->isSuccessful()) {
+            $result = $process->getOutput();
+        } else {
+            $result = $process->getErrorOutput();
+        }
+
+        return $result;
     }
 
     public function configureOptions(OptionsResolver $resolver)

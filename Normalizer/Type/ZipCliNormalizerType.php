@@ -21,7 +21,7 @@ class ZipCliNormalizerType extends AbstractNormalizerType
         $tmpDir = $this->fileHelper->mkTmpDir(uniqid());
         $target = $tmpDir . '/' . $fileFormat . '.' . $options['file_extension'];
 
-        $this->zip($sourceCollections, $target);
+        $this->zip($sourceCollections, $target, $options['command'], $options['arguments']);
         $collection->addFile($target);
         $collection->addCleanupFile($tmpDir);
 
@@ -29,11 +29,13 @@ class ZipCliNormalizerType extends AbstractNormalizerType
     }
 
     /**
-     * @param SourceCollection[] $sourceCollections
+     * @param array $sourceCollections
      * @param $target
-     * @param string $addPattern
+     * @param string $application
+     * @param array $arguments
+     * @return void
      */
-    private function zip(array $sourceCollections, $target)
+    private function zip(array $sourceCollections, $target, string $application = 'zip', array $arguments = []): void
     {
         $files = [];
         $projectDir = $this->fileHelper->normalizeDirectory('');
@@ -48,18 +50,10 @@ class ZipCliNormalizerType extends AbstractNormalizerType
             }
         }
 
-        $command = sprintf('zip %s %s', $target, implode(' ', $files));
+        $command = array_merge([$application], $arguments, [$target], $files);
 
         $process = new Process($command);
         $process->run();
-
-        if ($process->isSuccessful()) {
-            $result = $process->getOutput();
-        } else {
-            $result = $process->getErrorOutput();
-        }
-
-        return $result;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -67,6 +61,8 @@ class ZipCliNormalizerType extends AbstractNormalizerType
         $resolver->setDefaults([
             'file_format' => 'Y-m-d_H-i-s',
             'file_extension' => 'zip',
+            'command' => 'zip',
+            'arguments' => [],
             'recursive' => true,
         ]);
     }

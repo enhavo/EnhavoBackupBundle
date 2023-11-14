@@ -5,6 +5,7 @@ enhavo_app:
     template_paths:
         enhavo_backup:
             path: '@EnhavoBackupBundle/Resources/views'
+            alias: EnhavoBackupBundle
             priority: 10
     roles:
         enhavo_backup_backup_index:

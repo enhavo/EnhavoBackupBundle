@@ -17,7 +17,7 @@
   "require": {
     "ext-zip": "*",
     "ext-ftp": "*",
-    "php": "^7.2",
+    "php": ">=8.0",
     "enhavo/app-bundle": "0.13.x-dev",
     "enhavo/type": "0.13.x-dev",
     "symfony/lock": "^4.4",

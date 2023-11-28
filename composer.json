@@ -20,7 +20,7 @@
     "php": ">=8.0",
     "enhavo/app-bundle": "0.13.x-dev",
     "enhavo/type": "0.13.x-dev",
-    "symfony/lock": "^4.4",
+    "symfony/lock": "^5.4",
     "league/flysystem": "^1.1",
     "league/flysystem-sftp": "^1.0"
   }

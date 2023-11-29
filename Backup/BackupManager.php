@@ -3,55 +3,29 @@
 
 namespace Enhavo\Bundle\BackupBundle\Backup;
 
-
 use Enhavo\Bundle\BackupBundle\Exception\BackupNotFoundException;
-use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Enhavo\Bundle\BackupBundle\Storage\StorageCollection;
 use Enhavo\Bundle\BackupBundle\Utility\FileHelper;
+use Enhavo\Bundle\MediaBundle\Factory\FileFactory;
 use Enhavo\Component\Type\FactoryInterface;
 
 class BackupManager
 {
-    /** @var FactoryInterface */
-    private $sourceFactory;
-
-    /** @var FactoryInterface */
-    private $normalizerFactory;
-
-    /** @var FactoryInterface */
-    private $storageFactory;
-
-    /** @var FactoryInterface */
-    private $notificationFactory;
-
-    /** @var FileHelper */
-    private $fileHelper;
-
-    /** @var array */
-    private $configurations;
-
-    /**
-     * BackupManager constructor.
-     * @param FactoryInterface $sourceFactory
-     * @param FactoryInterface $normalizerFactory
-     * @param FactoryInterface $storageFactory
-     * @param FactoryInterface $notificationFactory
-     * @param FileHelper $fileHelper
-     * @param array $configurations
-     */
-    public function __construct(FactoryInterface $sourceFactory, FactoryInterface $normalizerFactory, FactoryInterface $storageFactory, FactoryInterface $notificationFactory, FileHelper $fileHelper, array $configurations)
-    {
-        $this->sourceFactory = $sourceFactory;
-        $this->normalizerFactory = $normalizerFactory;
-        $this->storageFactory = $storageFactory;
-        $this->notificationFactory = $notificationFactory;
-        $this->fileHelper = $fileHelper;
-        $this->configurations = $configurations;
+    public function __construct(
+        private FactoryInterface $sourceFactory,
+        private FactoryInterface $normalizerFactory,
+        private FactoryInterface $storageFactory,
+        private FactoryInterface $notificationFactory,
+        private FileHelper $fileHelper,
+        private array $configurations,
+        private FileFactory $fileFactory,
+    ) {
     }
 
-
-    public function backup($name)
+    public function backup($name): BackupOutput
     {
+        $output = new BackupOutput();
+
         $backup = $this->getBackup($name);
 
         $sourceCollections = [];
@@ -60,6 +34,11 @@ class BackupManager
             $sourceCollections = $backup->collect();
             $storageCollection = $backup->normalize($sourceCollections);
             $storageCollection->setName($backup->getName());
+
+            foreach ($storageCollection->getFiles() as $file) {
+                $output->addFile($this->fileFactory->createFromPath($file));
+            }
+
             $backup->store($storageCollection);
             $backup->cleanup();
 
@@ -74,6 +53,8 @@ class BackupManager
 
             throw $ex;
         }
+
+        return $output;
     }
 
     public function cleanup($name)

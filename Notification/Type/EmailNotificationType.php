@@ -54,7 +54,7 @@ class EmailNotificationType extends AbstractNotificationType
         $resolver->setDefaults([
             'name' => 'enhavo',
             'subject' => 'Backup Notification for "{{ resource.name }}"',
-            'template' => 'EnhavoBackupBundle:mail/notification:email.txt.twig',
+            'template' => 'mail/backup/notification.txt.twig',
             'content_type' => Message::CONTENT_TYPE_PLAIN,
         ]);
         $resolver->setRequired([

@@ -9,9 +9,9 @@ namespace Enhavo\Bundle\BackupBundle\Source\Type;
 use Enhavo\Bundle\BackupBundle\Source\AbstractSourceType;
 use Enhavo\Bundle\BackupBundle\Source\SourceCollection;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Process\Process;
+use Ifsnop\Mysqldump\Mysqldump;
 
-class MysqlSourceType extends AbstractSourceType
+class MysqldumpPHPSourceType extends AbstractSourceType
 {
     public function collect(array $options): SourceCollection
     {
@@ -36,33 +36,12 @@ class MysqlSourceType extends AbstractSourceType
         $dbHost = (urldecode(parse_url($url, PHP_URL_HOST)));
         $dbPort = (urldecode(parse_url($url, PHP_URL_PORT)));
 
-        $command = ['mysqldump'];
-        if ($dbUser) {
-            $command[] = sprintf('-u %s', $dbUser);
-        }
-        if ($dbPassword) {
-            $command[] = sprintf('-p%s', $dbPassword);
-        }
-        if ($dbHost) {
-            $command[] = sprintf('-h%s', $dbHost);
-        }
-        if ($dbPort) {
-            $command[] = sprintf('--port=%s', $dbPort);
-        }
-        $command[] = $dbName;
-        $command[] = sprintf('> %s', $target);
-
-
-        $process = new Process($command);
-        $process->run();
-
-        if ($process->isSuccessful()) {
-            $result = $process->getOutput();
-        } else {
-            $result = $process->getErrorOutput();
+        if (!$dbPort) {
+            $dbPort = 3306;
         }
 
-        return $result;
+        $dump = new Mysqldump(sprintf('mysql:host=%s;dbname=%s;port=%s)', $dbHost, $dbName, $dbPort), $dbUser, $dbPassword);
+        $dump->start($target);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -77,6 +56,6 @@ class MysqlSourceType extends AbstractSourceType
 
     public static function getName(): ?string
     {
-        return 'mysql';
+        return 'mysqldump_php';
     }
 }

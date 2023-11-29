@@ -4,3 +4,11 @@ enhavo_backup_backup_file_download:
     path: /enhavo/backup/backup/file/download/{id}
     methods: [GET]
     controller: Enhavo\Bundle\BackupBundle\Controller\DownloadController::downloadAction
+
+enhavo_backup_backup_download_create:
+    options:
+        expose: true
+    path: /enhavo/backup/backup/download/create/{backup}
+    defaults:
+        backup: default
+    controller: Enhavo\Bundle\BackupBundle\Controller\DownloadController::create

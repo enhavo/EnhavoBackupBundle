@@ -1,7 +1,0 @@
-enhavo_backup_admin:
-    resource: "@EnhavoBackupBundle/Resources/config/routing/admin/backup.yaml"
-    prefix: /
-
-enhavo_backup_file:
-    resource: "@EnhavoBackupBundle/Resources/config/routing/admin/backup_file.yaml"
-    prefix: /

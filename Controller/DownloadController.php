@@ -9,16 +9,17 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DownloadController extends AbstractController
 {
     /** @var BackupManager */
     private $backupManager;
-    
+
     /** @var RepositoryInterface */
     private $fileRepository;
-    
+
     /** @var FileHelper */
     private $fileHelper;
 
@@ -44,5 +45,11 @@ class DownloadController extends AbstractController
         return new BinaryFileResponse($this->fileHelper->normalizeDirectory($backupFile->getPath()) . '/' . $backupFile->getName(),
             200, [], true,
             ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+    }
+
+    public function create(Request $request): Response
+    {
+        $output = $this->backupManager->backup('default');
+        return new Response();
     }
 }

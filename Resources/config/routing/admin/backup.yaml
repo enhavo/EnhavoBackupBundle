@@ -16,6 +16,11 @@ enhavo_backup_backup_index:
                         type: create
                         hidden: true
                         route: ~
+                    download:
+                        type: download
+                        label: Backup
+                        hidden: true
+                        route: enhavo_backup_backup_download_create
 
 enhavo_backup_backup_update:
     options:

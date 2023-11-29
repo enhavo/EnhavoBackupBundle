@@ -1,4 +1,4 @@
-enhavo_backup_backup_create:
+enhavo_theme_backup_backup_create:
     options:
         expose: true
     path: /enhavo/backup/backup/create/{apiKey}/{backup}

@@ -1,5 +1,5 @@
 parameters:
-    enhavo_backup_api_key: '%env(ENHAVO_BACKUP_API_KEY)%'
+    enhavo_backup_api_key: '%env(BACKUP_API_KEY)%'
 
 services:
     Enhavo\Bundle\BackupBundle\Backup\BackupManager:
@@ -10,6 +10,7 @@ services:
             - '@Enhavo\Component\Type\FactoryInterface[BackupNotification]'
             - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
             - '%enhavo_backup.backups%'
+            - '@Enhavo\Bundle\MediaBundle\Factory\FileFactory'
 
     Enhavo\Bundle\BackupBundle\Utility\FileHelper:
         arguments:
@@ -33,6 +34,8 @@ services:
             - '@Enhavo\Bundle\BackupBundle\Backup\BackupManager'
             - '@enhavo_backup.repository.backup_file'
             - '@Enhavo\Bundle\BackupBundle\Utility\FileHelper'
+        calls:
+            - [setContainer, ['@service_container']]
         tags:
             - { name: controller.service_arguments }
             - { name: container.service_subscriber }
@@ -41,5 +44,8 @@ services:
     Enhavo\Bundle\BackupBundle\Controller\BackupController:
         arguments:
             - '%enhavo_backup_api_key%'
+        calls:
+            - [setContainer, ['@service_container']]
         tags:
             - { name: controller.service_arguments }
+            - { name: container.service_subscriber }

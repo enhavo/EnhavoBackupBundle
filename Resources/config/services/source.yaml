@@ -17,3 +17,8 @@ services:
         parent: Enhavo\Bundle\BackupBundle\Source\AbstractSourceType
         tags:
             - { name: enhavo_backup.source }
+
+    Enhavo\Bundle\BackupBundle\Source\Type\MysqldumpPHPSourceType:
+        parent: Enhavo\Bundle\BackupBundle\Source\AbstractSourceType
+        tags:
+            - { name: enhavo_backup.source }
